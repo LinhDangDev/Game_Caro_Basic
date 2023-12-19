@@ -18,3 +18,13 @@ D:\Code\AI\GAME_CARO\GAME_CARO\obj\Debug\GAME_CARO.csproj.GenerateResource.cache
 D:\Code\AI\GAME_CARO\GAME_CARO\obj\Debug\GAME_CARO.csproj.CoreCompileInputs.cache
 D:\Code\AI\GAME_CARO\GAME_CARO\obj\Debug\GAME_CARO.exe
 D:\Code\AI\GAME_CARO\GAME_CARO\obj\Debug\GAME_CARO.pdb
+D:\Code\AI\GAME_CARO\GAME_CARO\Game_Caro_Basic\bin\Debug\GAME_CARO.exe.config
+D:\Code\AI\GAME_CARO\GAME_CARO\Game_Caro_Basic\bin\Debug\GAME_CARO.exe
+D:\Code\AI\GAME_CARO\GAME_CARO\Game_Caro_Basic\bin\Debug\GAME_CARO.pdb
+D:\Code\AI\GAME_CARO\GAME_CARO\Game_Caro_Basic\obj\Debug\GAME_CARO.csproj.AssemblyReference.cache
+D:\Code\AI\GAME_CARO\GAME_CARO\Game_Caro_Basic\obj\Debug\GAME_CARO.frMain.resources
+D:\Code\AI\GAME_CARO\GAME_CARO\Game_Caro_Basic\obj\Debug\GAME_CARO.Properties.Resources.resources
+D:\Code\AI\GAME_CARO\GAME_CARO\Game_Caro_Basic\obj\Debug\GAME_CARO.csproj.GenerateResource.cache
+D:\Code\AI\GAME_CARO\GAME_CARO\Game_Caro_Basic\obj\Debug\GAME_CARO.csproj.CoreCompileInputs.cache
+D:\Code\AI\GAME_CARO\GAME_CARO\Game_Caro_Basic\obj\Debug\GAME_CARO.exe
+D:\Code\AI\GAME_CARO\GAME_CARO\Game_Caro_Basic\obj\Debug\GAME_CARO.pdb

@@ -61,27 +61,40 @@ namespace GAME_CARO
             }
         }
 
-        public void drawChessmanPlayerA(PaintEventArgs e, Chessman chessman)//  hàm này sẽ vẽ quân cờ màu đỏ trên bàn cờ - vẽ hình tròn
+        //public void drawChessmanPlayerA(PaintEventArgs e, Chessman chessman)//  hàm này sẽ vẽ quân cờ màu đỏ trên bàn cờ - vẽ hình tròn
+        //{
+        //    Pen pen = new Pen(Color.Red, (float)1.6);
+        //    e.Graphics.DrawEllipse(pen,
+        //                           chessman.X,
+        //                           chessman.Y,
+        //                           chessman.Width, chessman.Height);
+        //}
+        //public void drawChessmanPlayerB(PaintEventArgs e, Chessman chessman) // hàm này sẽ vẽ quân cờ màu xanh trên bàn cờ - vẽ chữ x
+        //{
+        //    Pen pen = new Pen(Color.Blue, (float)1.6);
+        //    e.Graphics.DrawLine(pen,
+        //                        chessman.X,
+        //                        chessman.Y,
+        //                        chessman.X + chessman.Width,
+        //                        chessman.Y + chessman.Height);
+        //    e.Graphics.DrawLine(pen,
+        //                        chessman.X + chessman.Width,
+        //                        chessman.Y,
+        //                        chessman.X,
+        //                        chessman.Y + chessman.Height);
+        //}
+        private Image imageX = Image.FromFile(@"D:\Code\AI\GAME_CARO\GAME_CARO\Game_Caro_Basic\img\x.png");
+        private Image imageO = Image.FromFile(@"D:\Code\AI\GAME_CARO\GAME_CARO\Game_Caro_Basic\img\o.png");
+
+        public void drawChessmanPlayerA(PaintEventArgs e, Chessman chessman)
         {
-            Pen pen = new Pen(Color.Red, (float)1.6);
-            e.Graphics.DrawEllipse(pen,
-                                   chessman.X,
-                                   chessman.Y,
-                                   chessman.Width, chessman.Height);
+            e.Graphics.DrawImage(imageO, chessman.X, chessman.Y, chessman.Width, chessman.Height);
         }
-        public void drawChessmanPlayerB(PaintEventArgs e, Chessman chessman) // hàm này sẽ vẽ quân cờ màu xanh trên bàn cờ - vẽ chữ x
+
+        public void drawChessmanPlayerB(PaintEventArgs e, Chessman chessman)
         {
-            Pen pen = new Pen(Color.Blue, (float)1.6);
-            e.Graphics.DrawLine(pen,
-                                chessman.X,
-                                chessman.Y,
-                                chessman.X + chessman.Width,
-                                chessman.Y + chessman.Height);
-            e.Graphics.DrawLine(pen,
-                                chessman.X + chessman.Width,
-                                chessman.Y,
-                                chessman.X,
-                                chessman.Y + chessman.Height);
+            e.Graphics.DrawImage(imageX, chessman.X, chessman.Y, chessman.Width, chessman.Height);
         }
+
     }
 }

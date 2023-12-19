@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace GAME_CARO
 {
@@ -21,7 +22,8 @@ namespace GAME_CARO
         private const int CHESSMAN_PLAYER_A = 1;//mình gán 1 sẽ là giá trị quân cờ của người chơi 1
         private const int CHESSMAN_PLAYER_B = 2;//tương tự 2 sẽ là giá trị quân cờ của người chơi 2
         private const int DISTANCE_BETWEEN_TWO_LINES = 20;//khoảng cách giữa hai đường thẳng trên bàn cờ
-        private Color CHESSBOARD_COLOR = Color.YellowGreen;//màu của bàn cờ
+
+        private Color CHESSBOARD_COLOR = ColorTranslator.FromHtml("#8D7B68");//màu của bàn cờ
         //
         Chessboard chessboard;
         private bool isPlayerA = true;//có pahir là lượt của người chơi A hay không
@@ -41,6 +43,7 @@ namespace GAME_CARO
         public frMain()
         {
             InitializeComponent();
+            
         }
 
         private void frMain_Load(object sender, EventArgs e)
@@ -121,12 +124,17 @@ namespace GAME_CARO
                     string str = isPlayerAWin == true ? playerA.Name : playerB.Name;
                     MessageBox.Show("GAME ORVER ! - " + str + " WIN");
                     isNextGame = false;
+                    txt_Speed.Text = "";
                     return;
                 }
                 //để chơi được với máy chúng ta cần viết thuật toán (AI) cho máy có thể chơi cùng chúng ta
                 //ở đây mình sử dụng giải thuật MinMax áp dụng cho cờ caro mà mình đã tham khảo trên mạng
 
                 assessMoves();
+
+                
+
+
                 chessman = new Chessman();
                 chessman.Width = DISTANCE_BETWEEN_TWO_LINES - 1;
                 chessman.Height = DISTANCE_BETWEEN_TWO_LINES - 1;
@@ -134,11 +142,14 @@ namespace GAME_CARO
                 chessman.X = currCellPutChessmanPC * DISTANCE_BETWEEN_TWO_LINES;
                 chessman.drawChessmanPlayerB(arg, chessman);
                 chessboard.ObjChessbroad[currRowPutChessmanPC, currCellPutChessmanPC] = CHESSMAN_PLAYER_B;
+
+
                 if (isGameOver() == false)
                 {
                     string str = isPlayerAWin == true ? playerA.Name : playerB.Name;
                     MessageBox.Show("GAME ORVER ! - " + str + " WIN");
                     isNextGame = false;
+                    txt_Speed.Text = "";
                 }
             }
             else
@@ -160,6 +171,7 @@ namespace GAME_CARO
                     string str = isPlayerAWin == true ? playerA.Name : playerB.Name;
                     MessageBox.Show("GAME ORVER ! - " + str + " WIN");
                     isNextGame = false;
+                    
                 }
             }
         }
@@ -327,6 +339,8 @@ namespace GAME_CARO
         #region AI
         private void assessMoves()//hàm đánh giá nước đi
         {
+            Stopwatch sw = Stopwatch.StartNew();
+            sw.Start();
             long maxScore = 0;
             long temScore = 0;
             for (int rowChessboard = 0; rowChessboard < chessboard.Row; rowChessboard++)
@@ -349,6 +363,9 @@ namespace GAME_CARO
                     }
                 }
             }
+            sw.Stop();
+            
+            txt_Speed.Text = sw.Elapsed.ToString();
         }
         #region attack
         private long attackScore_Row(int currRow, int currCell)//tính điểm tấn công của nước đi tiếp theo trên hàng ngang
@@ -438,11 +455,7 @@ namespace GAME_CARO
             long totalScore = 0;
             int numChessmanPlayerA = 0;
             int numChessmanPlayerB = 0;
-            for (int iCount = 1;
-                iCount < NUM_CHESSMAN_WIN + 2 &&
-                currCell + iCount < chessboard.Cell &&
-                currRow + iCount < chessboard.Row;
-                iCount++)
+            for (int iCount = 1; iCount < NUM_CHESSMAN_WIN + 2 && currCell + iCount < chessboard.Cell && currRow + iCount < chessboard.Row;iCount++)
             {
                 if (chessboard.ObjChessbroad[currRow + iCount, currCell + iCount] == CHESSMAN_PLAYER_A)
                 {
@@ -717,23 +730,28 @@ namespace GAME_CARO
         {
             isPlayWithPC = false;
             resetGame(sender, e);
+            txt_Speed.Text = "";
         }
 
         private void btnPC_Click(object sender, EventArgs e)
         {
             isPlayWithPC = true;
             resetGame(sender, e);
+                
         }
 
         private void btnNewGame_Click(object sender, EventArgs e)
         {
             resetGame(sender, e);
+            txt_Speed.Text = "";
         }
         private void resetGame(object sender, EventArgs e)
         {
             pnCenter.Invalidate();
             isNextGame = true;
             frMain_Load(sender, e);
+            txt_Speed.Text = "";
+
         }
     }
 }
