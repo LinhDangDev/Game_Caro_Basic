@@ -17,7 +17,7 @@ namespace GAME_CARO
         private const int MAX_LINE_X = 30;//số đường vẽ ngang
 
         private const int CHESSBOARD_WIDTH = 560;// độ rộng của bàn cờ
-        private const int CHESSBOARD_HIGHT = 520; //chiều cao của bàn cờ
+        private const int CHESSBOARD_HIGHT = 560; //chiều cao của bàn cờ
 
         private const int CHESSMAN_PLAYER_A = 1;//mình gán 1 sẽ là giá trị quân cờ của người chơi 1
         private const int CHESSMAN_PLAYER_B = 2;//tương tự 2 sẽ là giá trị quân cờ của người chơi 2
@@ -40,6 +40,8 @@ namespace GAME_CARO
         //
         private int[] attackScore = new int[6] { 0, 1, 9, 81, 729, 59049 };//mảng điểm tấn công
         private int[] defenseScore = new int[6] { 0, 2, 18, 162, 1458, 118098 };//mảng điểm phòng ngự, phòng ngự được ưu tiên
+
+
         public frMain()
         {
             InitializeComponent();
@@ -87,7 +89,7 @@ namespace GAME_CARO
         }
         private void setColorChessboard()
         {
-            pnCenter.BackColor = CHESSBOARD_COLOR;
+            pnCenter.BackColor = CHESSBOARD_COLOR;// Hàm set màu cho bàn cờ (panel center)
         }
 
         private void pnCenter_MouseClick(object sender, MouseEventArgs e)
@@ -340,6 +342,7 @@ namespace GAME_CARO
         private void assessMoves()//hàm đánh giá nước đi
         {
             Stopwatch sw = Stopwatch.StartNew();
+            sw.Reset();
             sw.Start();
             long maxScore = 0;
             long temScore = 0;
