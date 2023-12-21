@@ -24,6 +24,7 @@ namespace GAME_CARO
         private const int DISTANCE_BETWEEN_TWO_LINES = 20;//khoảng cách giữa hai đường thẳng trên bàn cờ
 
         private Color CHESSBOARD_COLOR = ColorTranslator.FromHtml("#8D7B68");//màu của bàn cờ
+
         //
         Chessboard chessboard;
         private bool isPlayerA = true;//có pahir là lượt của người chơi A hay không
@@ -58,7 +59,7 @@ namespace GAME_CARO
             if (isPlayWithPC)
             {
                 playerA = new Player(1, "PLAYER A");
-                playerB = new Player(2, "PC");
+                playerB = new Player(2, "AI");
             }
             else
             {
@@ -124,18 +125,15 @@ namespace GAME_CARO
                 if (isGameOver() == false)
                 {
                     string str = isPlayerAWin == true ? playerA.Name : playerB.Name;
-                    MessageBox.Show("GAME ORVER ! - " + str + " WIN");
+                    MessageBox.Show("GAME OVER ! - " + str + " WIN");
                     isNextGame = false;
                     txt_Speed.Text = "";
                     return;
                 }
                 //để chơi được với máy chúng ta cần viết thuật toán (AI) cho máy có thể chơi cùng chúng ta
-                //ở đây mình sử dụng giải thuật MinMax áp dụng cho cờ caro mà mình đã tham khảo trên mạng
+                //ở đây mình sử dụng giải thuật MiniMax áp dụng cho cờ caro mà mình đã tham khảo trên mạng
 
                 assessMoves();
-
-                
-
 
                 chessman = new Chessman();
                 chessman.Width = DISTANCE_BETWEEN_TWO_LINES - 1;
@@ -149,7 +147,7 @@ namespace GAME_CARO
                 if (isGameOver() == false)
                 {
                     string str = isPlayerAWin == true ? playerA.Name : playerB.Name;
-                    MessageBox.Show("GAME ORVER ! - " + str + " WIN");
+                    MessageBox.Show("GAME OVER ! - " + str + " WIN");
                     isNextGame = false;
                     txt_Speed.Text = "";
                 }
@@ -171,7 +169,7 @@ namespace GAME_CARO
                 if (isGameOver() == false)
                 {
                     string str = isPlayerAWin == true ? playerA.Name : playerB.Name;
-                    MessageBox.Show("GAME ORVER ! - " + str + " WIN");
+                    MessageBox.Show("GAME OVER ! - " + str + " WIN");
                     isNextGame = false;
                     
                 }
@@ -327,10 +325,8 @@ namespace GAME_CARO
                             }
                         }
                     }
-                    if (countRow == NUM_CHESSMAN_WIN + 1
-                       || countCell == NUM_CHESSMAN_WIN + 1
-                       || countCrossLineRight == NUM_CHESSMAN_WIN + 1
-                       || countCrossLineLeft == NUM_CHESSMAN_WIN + 1)
+                    if (countRow == NUM_CHESSMAN_WIN + 1|| countCell == NUM_CHESSMAN_WIN + 1
+                       || countCrossLineRight == NUM_CHESSMAN_WIN + 1|| countCrossLineLeft == NUM_CHESSMAN_WIN + 1)
                     {
                         return false;
                     }

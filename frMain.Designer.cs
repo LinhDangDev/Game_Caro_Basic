@@ -30,22 +30,18 @@
         {
             this.pnLeft = new System.Windows.Forms.Panel();
             this.lbNamePlayerA = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.btnNewGame = new System.Windows.Forms.Button();
             this.btnPC = new System.Windows.Forms.Button();
             this.btnPerson = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
             this.pnRight = new System.Windows.Forms.Panel();
-            this.txt_Speed = new System.Windows.Forms.TextBox();
-            this.grb_Algorithm = new System.Windows.Forms.GroupBox();
-            this.rb_AlphaBeta_Prunning = new System.Windows.Forms.RadioButton();
-            this.rb_Minimax = new System.Windows.Forms.RadioButton();
             this.lbNamePlayerB = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.txt_Speed = new System.Windows.Forms.TextBox();
             this.pnCenter = new System.Windows.Forms.Panel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pnLeft.SuspendLayout();
             this.pnRight.SuspendLayout();
-            this.grb_Algorithm.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -68,38 +64,6 @@
             this.lbNamePlayerA.TabIndex = 2;
             this.lbNamePlayerA.Text = "Player1";
             // 
-            // btnNewGame
-            // 
-            this.btnNewGame.Location = new System.Drawing.Point(211, 635);
-            this.btnNewGame.Name = "btnNewGame";
-            this.btnNewGame.Size = new System.Drawing.Size(146, 28);
-            this.btnNewGame.TabIndex = 1;
-            this.btnNewGame.Text = "Game mới";
-            this.btnNewGame.UseVisualStyleBackColor = true;
-            this.btnNewGame.Click += new System.EventHandler(this.btnNewGame_Click);
-            // 
-            // btnPC
-            // 
-            this.btnPC.Location = new System.Drawing.Point(210, 602);
-            this.btnPC.Name = "btnPC";
-            this.btnPC.Size = new System.Drawing.Size(147, 27);
-            this.btnPC.TabIndex = 1;
-            this.btnPC.Text = "Chơi với máy";
-            this.btnPC.UseVisualStyleBackColor = true;
-            this.btnPC.Click += new System.EventHandler(this.btnPC_Click);
-            // 
-            // btnPerson
-            // 
-            this.btnPerson.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.btnPerson.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.btnPerson.Location = new System.Drawing.Point(211, 565);
-            this.btnPerson.Name = "btnPerson";
-            this.btnPerson.Size = new System.Drawing.Size(146, 31);
-            this.btnPerson.TabIndex = 1;
-            this.btnPerson.Text = "Chơi với người";
-            this.btnPerson.UseVisualStyleBackColor = false;
-            this.btnPerson.Click += new System.EventHandler(this.btnPerson_Click);
-            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -110,6 +74,38 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "NGƯỜI CHƠI 1";
             // 
+            // btnNewGame
+            // 
+            this.btnNewGame.Location = new System.Drawing.Point(417, 565);
+            this.btnNewGame.Name = "btnNewGame";
+            this.btnNewGame.Size = new System.Drawing.Size(146, 28);
+            this.btnNewGame.TabIndex = 1;
+            this.btnNewGame.Text = "Game mới";
+            this.btnNewGame.UseVisualStyleBackColor = true;
+            this.btnNewGame.Click += new System.EventHandler(this.btnNewGame_Click);
+            // 
+            // btnPC
+            // 
+            this.btnPC.Location = new System.Drawing.Point(251, 603);
+            this.btnPC.Name = "btnPC";
+            this.btnPC.Size = new System.Drawing.Size(142, 27);
+            this.btnPC.TabIndex = 1;
+            this.btnPC.Text = "Chơi với máy";
+            this.btnPC.UseVisualStyleBackColor = true;
+            this.btnPC.Click += new System.EventHandler(this.btnPC_Click);
+            // 
+            // btnPerson
+            // 
+            this.btnPerson.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.btnPerson.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.btnPerson.Location = new System.Drawing.Point(251, 565);
+            this.btnPerson.Name = "btnPerson";
+            this.btnPerson.Size = new System.Drawing.Size(146, 31);
+            this.btnPerson.TabIndex = 1;
+            this.btnPerson.Text = "Chơi với người";
+            this.btnPerson.UseVisualStyleBackColor = false;
+            this.btnPerson.Click += new System.EventHandler(this.btnPerson_Click);
+            // 
             // pnRight
             // 
             this.pnRight.Controls.Add(this.lbNamePlayerB);
@@ -118,49 +114,6 @@
             this.pnRight.Name = "pnRight";
             this.pnRight.Size = new System.Drawing.Size(188, 179);
             this.pnRight.TabIndex = 0;
-            // 
-            // txt_Speed
-            // 
-            this.txt_Speed.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F);
-            this.txt_Speed.ForeColor = System.Drawing.SystemColors.InactiveCaption;
-            this.txt_Speed.Location = new System.Drawing.Point(363, 565);
-            this.txt_Speed.Name = "txt_Speed";
-            this.txt_Speed.ReadOnly = true;
-            this.txt_Speed.Size = new System.Drawing.Size(272, 38);
-            this.txt_Speed.TabIndex = 4;
-            // 
-            // grb_Algorithm
-            // 
-            this.grb_Algorithm.Controls.Add(this.rb_AlphaBeta_Prunning);
-            this.grb_Algorithm.Controls.Add(this.rb_Minimax);
-            this.grb_Algorithm.Location = new System.Drawing.Point(649, 565);
-            this.grb_Algorithm.Name = "grb_Algorithm";
-            this.grb_Algorithm.Size = new System.Drawing.Size(165, 103);
-            this.grb_Algorithm.TabIndex = 3;
-            this.grb_Algorithm.TabStop = false;
-            this.grb_Algorithm.Text = "Algorithm";
-            // 
-            // rb_AlphaBeta_Prunning
-            // 
-            this.rb_AlphaBeta_Prunning.AutoSize = true;
-            this.rb_AlphaBeta_Prunning.Location = new System.Drawing.Point(17, 61);
-            this.rb_AlphaBeta_Prunning.Name = "rb_AlphaBeta_Prunning";
-            this.rb_AlphaBeta_Prunning.Size = new System.Drawing.Size(122, 17);
-            this.rb_AlphaBeta_Prunning.TabIndex = 1;
-            this.rb_AlphaBeta_Prunning.TabStop = true;
-            this.rb_AlphaBeta_Prunning.Text = "AlphaBeta_Prunning";
-            this.rb_AlphaBeta_Prunning.UseVisualStyleBackColor = true;
-            // 
-            // rb_Minimax
-            // 
-            this.rb_Minimax.AutoSize = true;
-            this.rb_Minimax.Location = new System.Drawing.Point(17, 28);
-            this.rb_Minimax.Name = "rb_Minimax";
-            this.rb_Minimax.Size = new System.Drawing.Size(63, 17);
-            this.rb_Minimax.TabIndex = 0;
-            this.rb_Minimax.TabStop = true;
-            this.rb_Minimax.Text = "Minimax";
-            this.rb_Minimax.UseVisualStyleBackColor = true;
             // 
             // lbNamePlayerB
             // 
@@ -182,6 +135,16 @@
             this.label2.TabIndex = 0;
             this.label2.Text = "NGƯỜI CHƠI 2";
             // 
+            // txt_Speed
+            // 
+            this.txt_Speed.Font = new System.Drawing.Font("Microsoft Sans Serif", 30F);
+            this.txt_Speed.ForeColor = System.Drawing.SystemColors.InactiveCaption;
+            this.txt_Speed.Location = new System.Drawing.Point(591, 565);
+            this.txt_Speed.Name = "txt_Speed";
+            this.txt_Speed.ReadOnly = true;
+            this.txt_Speed.Size = new System.Drawing.Size(339, 53);
+            this.txt_Speed.TabIndex = 4;
+            // 
             // pnCenter
             // 
             this.pnCenter.BackColor = System.Drawing.Color.WhiteSmoke;
@@ -196,9 +159,9 @@
             // 
             this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.pictureBox1.Image = global::GAME_CARO.Properties.Resources.logo;
-            this.pictureBox1.Location = new System.Drawing.Point(839, 408);
+            this.pictureBox1.Location = new System.Drawing.Point(853, 12);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(190, 202);
+            this.pictureBox1.Size = new System.Drawing.Size(160, 158);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 5;
             this.pictureBox1.TabStop = false;
@@ -209,7 +172,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1046, 686);
             this.Controls.Add(this.pictureBox1);
-            this.Controls.Add(this.grb_Algorithm);
             this.Controls.Add(this.btnNewGame);
             this.Controls.Add(this.txt_Speed);
             this.Controls.Add(this.btnPC);
@@ -224,8 +186,6 @@
             this.pnLeft.PerformLayout();
             this.pnRight.ResumeLayout(false);
             this.pnRight.PerformLayout();
-            this.grb_Algorithm.ResumeLayout(false);
-            this.grb_Algorithm.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -244,9 +204,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label lbNamePlayerA;
         private System.Windows.Forms.Label lbNamePlayerB;
-        private System.Windows.Forms.GroupBox grb_Algorithm;
-        private System.Windows.Forms.RadioButton rb_AlphaBeta_Prunning;
-        private System.Windows.Forms.RadioButton rb_Minimax;
         private System.Windows.Forms.TextBox txt_Speed;
         private System.Windows.Forms.PictureBox pictureBox1;
     }
