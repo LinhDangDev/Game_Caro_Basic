@@ -344,18 +344,23 @@ namespace GAME_CARO
             int bestMoveRow = -1;
             int bestMoveCell = -1;
 
+            // Duyệt qua từng ô trống trên bàn cờ để đánh giá nước đi tốt nhất
             for (int rowChessboard = 0; rowChessboard < chessboard.Row; rowChessboard++)
             {
                 for (int cellChessboard = 0; cellChessboard < chessboard.Cell; cellChessboard++)
                 {
                     if (chessboard.ObjChessbroad[rowChessboard, cellChessboard] == 0)
                     {
+                        // Đặt quân cờ của máy vào ô trống và đánh giá nước đi
                         chessboard.ObjChessbroad[rowChessboard, cellChessboard] = CHESSMAN_PLAYER_B;
 
+                        // Gọi hàm minimaxAlphaBeta để đánh giá giá trị của nước đi
                         long score = minimaxAlphaBeta(chessboard, depth, long.MinValue, long.MaxValue, false);
 
+                        // Hủy bỏ quân cờ đã đặt để trở lại trạng thái trước đó của bàn cờ
                         chessboard.ObjChessbroad[rowChessboard, cellChessboard] = 0;
 
+                        // Cập nhật điểm tốt nhất nếu nước đi hiện tại có điểm cao hơn
                         if (score > maxScore)
                         {
                             maxScore = score;
@@ -366,6 +371,7 @@ namespace GAME_CARO
                 }
             }
 
+            // Lưu trữ nước đi tốt nhất đã tìm được
             currRowPutChessmanPC = bestMoveRow;
             currCellPutChessmanPC = bestMoveCell;
 
@@ -375,6 +381,7 @@ namespace GAME_CARO
 
         private long minimaxAlphaBeta(Chessboard board, int depth, long alpha, long beta, bool maximizingPlayer)
         {
+            // Kiểm tra điều kiện dừng của đệ quy
             if (depth == 0 || isTerminalNode(board))
             {
                 return evaluate(board);
@@ -383,6 +390,8 @@ namespace GAME_CARO
             if (maximizingPlayer)
             {
                 long maxEval = long.MinValue;
+
+                // Duyệt qua các ô trống và đánh giá nước đi cho máy
                 for (int row = 0; row < board.Row; row++)
                 {
                     for (int cell = 0; cell < board.Cell; cell++)
@@ -390,10 +399,18 @@ namespace GAME_CARO
                         if (board.ObjChessbroad[row, cell] == 0)
                         {
                             board.ObjChessbroad[row, cell] = CHESSMAN_PLAYER_B;
+
+                            // Đệ quy gọi minimaxAlphaBeta cho nước đi tiếp theo của đối thủ
                             long eval = minimaxAlphaBeta(board, depth - 1, alpha, beta, false);
+
+                            // Hủy bỏ quân cờ đã đặt để trở lại trạng thái trước đó của bàn cờ
                             board.ObjChessbroad[row, cell] = 0;
+
+                            // Cập nhật giá trị lớn nhất
                             maxEval = Math.Max(maxEval, eval);
                             alpha = Math.Max(alpha, eval);
+
+                            // Kiểm tra cắt tỉa Alpha-beta
                             if (beta <= alpha)
                             {
                                 break;
@@ -406,6 +423,8 @@ namespace GAME_CARO
             else
             {
                 long minEval = long.MaxValue;
+
+                // Duyệt qua các ô trống và đánh giá nước đi cho đối thủ
                 for (int row = 0; row < board.Row; row++)
                 {
                     for (int cell = 0; cell < board.Cell; cell++)
@@ -413,10 +432,18 @@ namespace GAME_CARO
                         if (board.ObjChessbroad[row, cell] == 0)
                         {
                             board.ObjChessbroad[row, cell] = CHESSMAN_PLAYER_A;
+
+                            // Đệ quy gọi minimaxAlphaBeta cho nước đi tiếp theo của máy
                             long eval = minimaxAlphaBeta(board, depth - 1, alpha, beta, true);
+
+                            // Hủy bỏ quân cờ đã đặt để trở lại trạng thái trước đó của bàn cờ
                             board.ObjChessbroad[row, cell] = 0;
+
+                            // Cập nhật giá trị nhỏ nhất
                             minEval = Math.Min(minEval, eval);
                             beta = Math.Min(beta, eval);
+
+                            // Kiểm tra cắt tỉa Alpha-beta
                             if (beta <= alpha)
                             {
                                 break;
@@ -427,6 +454,7 @@ namespace GAME_CARO
                 return minEval;
             }
         }
+
 
         private long evaluate(Chessboard board)
         {
@@ -448,9 +476,11 @@ namespace GAME_CARO
 
         private long evaluateDirection(Chessboard board, int rowDelta, int cellDelta)
         {
+            // Hàm đánh giá số điểm cho mỗi hướng trên bàn cờ (hàng ngang, cột dọc, đường chéo chính, đường chéo phụ)
             long totalScore = 0;
             int numChessmanPlayerA, numChessmanPlayerB;
 
+            // Duyệt qua từng ô trên bàn cờ
             for (int rowChessboard = 0; rowChessboard < board.Row; rowChessboard++)
             {
                 for (int cellChessboard = 0; cellChessboard < board.Cell; cellChessboard++)
@@ -458,13 +488,16 @@ namespace GAME_CARO
                     numChessmanPlayerA = 0;
                     numChessmanPlayerB = 0;
 
+                    // Duyệt qua số ô cờ cần đánh giá trong mỗi hướng
                     for (int i = 0; i < NUM_CHESSMAN_WIN; i++)
                     {
                         int row = rowChessboard + i * rowDelta;
                         int cell = cellChessboard + i * cellDelta;
 
+                        // Kiểm tra xem ô cờ có nằm trong biên của bàn cờ không
                         if (row >= 0 && row < board.Row && cell >= 0 && cell < board.Cell)
                         {
+                            // Đếm số lượng quân cờ của cả hai người chơi trong hướng này
                             if (board.ObjChessbroad[row, cell] == CHESSMAN_PLAYER_A)
                             {
                                 numChessmanPlayerA++;
@@ -476,12 +509,14 @@ namespace GAME_CARO
                         }
                     }
 
+                    // Đánh giá điểm cho dãy các ô cờ trong một hướng
                     totalScore += evaluateLine(numChessmanPlayerA, numChessmanPlayerB);
                 }
             }
 
             return totalScore;
         }
+
 
         private long evaluateLine(int numChessmanPlayerA, int numChessmanPlayerB)
         {
