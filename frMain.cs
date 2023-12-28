@@ -39,8 +39,8 @@ namespace GAME_CARO
         static int currRowPutChessmanPC;
         static int currCellPutChessmanPC;
         //
-        //private int[] attackscore = new int[6] { 0, 1, 9, 81, 729, 59049 };//mảng điểm tấn công
-        //private int[] defensescore = new int[6] { 0, 2, 18, 162, 1458, 118098 };//mảng điểm phòng ngự, phòng ngự được ưu tiên
+        private int[] attackScore = new int[6] { 0, 1, 9, 81, 729, 59049 };//mảng điểm tấn công
+        private int[] defenseScore = new int[6] { 0, 2, 18, 162, 1458, 118098 };//mảng điểm phòng ngự, phòng ngự được ưu tiên
 
 
         public frMain()
@@ -56,16 +56,8 @@ namespace GAME_CARO
             chessboard = new Chessboard(rowChessBoard, cellChessBoard);
             currRowPutChessmanPC = 0;
             currCellPutChessmanPC = 0;
-            if (isPlayWithPC)
-            {
                 playerA = new Player(1, "PLAYER A");
                 playerB = new Player(2, "AI");
-            }
-            else
-            {
-                playerA = new Player(1, "PLAYER A");
-                playerB = new Player(2, "PLAYER B");
-            }
             lbNamePlayerA.Text = playerA.Name;
             lbNamePlayerB.Text = playerB.Name;
         }
@@ -133,7 +125,7 @@ namespace GAME_CARO
                 //để chơi được với máy chúng ta cần viết thuật toán (AI) cho máy có thể chơi cùng chúng ta
                 //ở đây mình sử dụng giải thuật MiniMax áp dụng cho cờ caro mà mình đã tham khảo trên mạng
 
-                assessMoves(4);
+                assessMoves();
 
                 chessman = new Chessman();
                 chessman.Width = DISTANCE_BETWEEN_TWO_LINES - 1;
@@ -334,255 +326,395 @@ namespace GAME_CARO
             }
             return true;
         }
-        private void assessMoves(int depth)
+        #region AI
+        private void assessMoves()//hàm đánh giá nước đi
         {
-            Stopwatch sw = Stopwatch.StartNew();
-            sw.Reset();
-            sw.Start();
-
-            long maxScore = long.MinValue;
-            int bestMoveRow = -1;
-            int bestMoveCell = -1;
-
-            // Duyệt qua từng ô trống trên bàn cờ để đánh giá nước đi tốt nhất
+            long maxScore = 0;
+            long temScore = 0;
             for (int rowChessboard = 0; rowChessboard < chessboard.Row; rowChessboard++)
             {
                 for (int cellChessboard = 0; cellChessboard < chessboard.Cell; cellChessboard++)
                 {
                     if (chessboard.ObjChessbroad[rowChessboard, cellChessboard] == 0)
                     {
-                        // Đặt quân cờ của máy vào ô trống và đánh giá nước đi
-                        chessboard.ObjChessbroad[rowChessboard, cellChessboard] = CHESSMAN_PLAYER_B;
-
-                        // Gọi hàm minimaxAlphaBeta để đánh giá giá trị của nước đi
-                        long score = minimaxAlphaBeta(chessboard, depth, long.MinValue, long.MaxValue, false);
-
-                        // Hủy bỏ quân cờ đã đặt để trở lại trạng thái trước đó của bàn cờ
-                        chessboard.ObjChessbroad[rowChessboard, cellChessboard] = 0;
-
-                        // Cập nhật điểm tốt nhất nếu nước đi hiện tại có điểm cao hơn
-                        if (score > maxScore)
+                        long attackScore = attackScore_Row(rowChessboard, cellChessboard) + attackScore_Cell(rowChessboard, cellChessboard)
+                                           + attackScore_CrossRight(rowChessboard, cellChessboard) + attackScore_CrossLeft(rowChessboard, cellChessboard);
+                        long defenceScore = defenceScore_Row(rowChessboard, cellChessboard) + defenceScore_Cell(rowChessboard, cellChessboard)
+                                            + defenceScore_CrossRight(rowChessboard, cellChessboard) + defenceScore_CrossLeft(rowChessboard, cellChessboard);
+                        temScore = attackScore > defenceScore ? attackScore : defenceScore;
+                        if (maxScore < temScore)
                         {
-                            maxScore = score;
-                            bestMoveRow = rowChessboard;
-                            bestMoveCell = cellChessboard;
+                            maxScore = temScore;
+                            currRowPutChessmanPC = rowChessboard;
+                            currCellPutChessmanPC = cellChessboard;
                         }
                     }
                 }
-            }
-
-            // Lưu trữ nước đi tốt nhất đã tìm được
-            currRowPutChessmanPC = bestMoveRow;
-            currCellPutChessmanPC = bestMoveCell;
-
-            sw.Stop();
-            txt_Speed.Text = sw.Elapsed.ToString();
-        }
-
-        private long minimaxAlphaBeta(Chessboard board, int depth, long alpha, long beta, bool maximizingPlayer)
-        {
-            // Kiểm tra điều kiện dừng của đệ quy
-            if (depth == 0 || isTerminalNode(board))
-            {
-                return evaluate(board);
-            }
-
-            if (maximizingPlayer)
-            {
-                long maxEval = long.MinValue;
-
-                // Duyệt qua các ô trống và đánh giá nước đi cho máy
-                for (int row = 0; row < board.Row; row++)
-                {
-                    for (int cell = 0; cell < board.Cell; cell++)
-                    {
-                        if (board.ObjChessbroad[row, cell] == 0)
-                        {
-                            board.ObjChessbroad[row, cell] = CHESSMAN_PLAYER_B;
-
-                            // Đệ quy gọi minimaxAlphaBeta cho nước đi tiếp theo của đối thủ
-                            long eval = minimaxAlphaBeta(board, depth - 1, alpha, beta, false);
-
-                            // Hủy bỏ quân cờ đã đặt để trở lại trạng thái trước đó của bàn cờ
-                            board.ObjChessbroad[row, cell] = 0;
-
-                            // Cập nhật giá trị lớn nhất
-                            maxEval = Math.Max(maxEval, eval);
-                            alpha = Math.Max(alpha, eval);
-
-                            // Kiểm tra cắt tỉa Alpha-beta
-                            if (beta <= alpha)
-                            {
-                                break;
-                            }
-                        }
-                    }
-                }
-                return maxEval;
-            }
-            else
-            {
-                long minEval = long.MaxValue;
-
-                // Duyệt qua các ô trống và đánh giá nước đi cho đối thủ
-                for (int row = 0; row < board.Row; row++)
-                {
-                    for (int cell = 0; cell < board.Cell; cell++)
-                    {
-                        if (board.ObjChessbroad[row, cell] == 0)
-                        {
-                            board.ObjChessbroad[row, cell] = CHESSMAN_PLAYER_A;
-
-                            // Đệ quy gọi minimaxAlphaBeta cho nước đi tiếp theo của máy
-                            long eval = minimaxAlphaBeta(board, depth - 1, alpha, beta, true);
-
-                            // Hủy bỏ quân cờ đã đặt để trở lại trạng thái trước đó của bàn cờ
-                            board.ObjChessbroad[row, cell] = 0;
-
-                            // Cập nhật giá trị nhỏ nhất
-                            minEval = Math.Min(minEval, eval);
-                            beta = Math.Min(beta, eval);
-
-                            // Kiểm tra cắt tỉa Alpha-beta
-                            if (beta <= alpha)
-                            {
-                                break;
-                            }
-                        }
-                    }
-                }
-                return minEval;
             }
         }
 
 
-        private long evaluate(Chessboard board)
+        #region attack
+        private long attackScore_Row(int currRow, int currCell)//tính điểm tấn công của nước đi tiếp theo trên hàng ngang
         {
             long totalScore = 0;
-
-            // Đánh giá theo số lượng quân cờ của cả hai người chơi trong các đường hàng ngang, cột dọc và đường chéo
-            totalScore += evaluateDirection(board, 1, 0); // Hàng ngang
-            totalScore += evaluateDirection(board, 0, 1); // Cột dọc
-            totalScore += evaluateDirection(board, 1, 1); // Đường chéo chính
-            totalScore += evaluateDirection(board, 1, -1); // Đường chéo phụ
-
+            int numChessmanPlayerA = 0;
+            int numChessmanPlayerB = 0;
+            for (int iCount = 1; iCount < NUM_CHESSMAN_WIN + 2 && currRow + iCount < chessboard.Row; iCount++)
+            {
+                if (chessboard.ObjChessbroad[currRow + iCount, currCell] == CHESSMAN_PLAYER_A)
+                {
+                    numChessmanPlayerA++;
+                }
+                else if (chessboard.ObjChessbroad[currRow + iCount, currCell] == CHESSMAN_PLAYER_B)
+                {
+                    numChessmanPlayerB++;
+                    break;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            for (int iCount = 1; iCount < NUM_CHESSMAN_WIN + 2 && currRow - iCount >= 0; iCount++)
+            {
+                if (chessboard.ObjChessbroad[currRow - iCount, currCell] == CHESSMAN_PLAYER_A)
+                {
+                    numChessmanPlayerA++;
+                }
+                else if (chessboard.ObjChessbroad[currRow - iCount, currCell] == CHESSMAN_PLAYER_B)
+                {
+                    numChessmanPlayerB++;
+                    break;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            totalScore -= defenseScore[numChessmanPlayerB];
+            totalScore += attackScore[numChessmanPlayerA];
             return totalScore;
         }
-
-        private bool isTerminalNode(Chessboard board)
+        private long attackScore_Cell(int currRow, int currCell)//cọt dọc
         {
-            return isGameOver() || isBoardFull(board);
-        }
-
-        private long evaluateDirection(Chessboard board, int rowDelta, int cellDelta)
-        {
-            // Hàm đánh giá số điểm cho mỗi hướng trên bàn cờ (hàng ngang, cột dọc, đường chéo chính, đường chéo phụ)
             long totalScore = 0;
-            int numChessmanPlayerA, numChessmanPlayerB;
-
-            // Duyệt qua từng ô trên bàn cờ
-            for (int rowChessboard = 0; rowChessboard < board.Row; rowChessboard++)
+            int numChessmanPlayerA = 0;
+            int numChessmanPlayerB = 0;
+            for (int iCount = 1; iCount < NUM_CHESSMAN_WIN + 2 && currCell + iCount < chessboard.Cell; iCount++)
             {
-                for (int cellChessboard = 0; cellChessboard < board.Cell; cellChessboard++)
+                if (chessboard.ObjChessbroad[currRow, currCell + iCount] == CHESSMAN_PLAYER_A)
                 {
-                    numChessmanPlayerA = 0;
-                    numChessmanPlayerB = 0;
-
-                    // Duyệt qua số ô cờ cần đánh giá trong mỗi hướng
-                    for (int i = 0; i < NUM_CHESSMAN_WIN; i++)
-                    {
-                        int row = rowChessboard + i * rowDelta;
-                        int cell = cellChessboard + i * cellDelta;
-
-                        // Kiểm tra xem ô cờ có nằm trong biên của bàn cờ không
-                        if (row >= 0 && row < board.Row && cell >= 0 && cell < board.Cell)
-                        {
-                            // Đếm số lượng quân cờ của cả hai người chơi trong hướng này
-                            if (board.ObjChessbroad[row, cell] == CHESSMAN_PLAYER_A)
-                            {
-                                numChessmanPlayerA++;
-                            }
-                            else if (board.ObjChessbroad[row, cell] == CHESSMAN_PLAYER_B)
-                            {
-                                numChessmanPlayerB++;
-                            }
-                        }
-                    }
-
-                    // Đánh giá điểm cho dãy các ô cờ trong một hướng
-                    totalScore += evaluateLine(numChessmanPlayerA, numChessmanPlayerB);
+                    numChessmanPlayerA++;
+                }
+                else if (chessboard.ObjChessbroad[currRow, currCell + iCount] == CHESSMAN_PLAYER_B)
+                {
+                    numChessmanPlayerB++;
+                    break;
+                }
+                else
+                {
+                    break;
                 }
             }
-
+            for (int iCount = 1; iCount < NUM_CHESSMAN_WIN + 2 && currCell - iCount >= 0; iCount++)
+            {
+                if (chessboard.ObjChessbroad[currRow, currCell - iCount] == CHESSMAN_PLAYER_A)
+                {
+                    numChessmanPlayerA++;
+                }
+                else if (chessboard.ObjChessbroad[currRow, currCell - iCount] == CHESSMAN_PLAYER_B)
+                {
+                    numChessmanPlayerB++;
+                    break;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            totalScore -= defenseScore[numChessmanPlayerB];
+            totalScore += attackScore[numChessmanPlayerA];
             return totalScore;
         }
-
-
-        private long evaluateLine(int numChessmanPlayerA, int numChessmanPlayerB)
+        private long attackScore_CrossRight(int currRow, int currCell)//chéo phải
         {
-            long score = 0;
-
-            // Thêm logic đánh giá cho từng dòng, cột, hoặc đường chéo
-            // Giả sử bạn muốn tăng điểm nếu có quân cờ của máy và giảm điểm nếu có quân cờ của người chơi
-            // Có thể điều chỉnh dựa trên chiến thuật và yêu cầu cụ thể của trò chơi
-            score += evaluatePlayerScore(numChessmanPlayerA);
-            score -= evaluatePlayerScore(numChessmanPlayerB);
-
-            return score;
-        }
-
-        private long evaluatePlayerScore(int numChessman)
-        {
-            long score = 0;
-
-            // Thêm logic đánh giá điểm cho số lượng quân cờ của người chơi
-            // Có thể điều chỉnh dựa trên chiến thuật và yêu cầu cụ thể của trò chơi
-            switch (numChessman)
+            long totalScore = 0;
+            int numChessmanPlayerA = 0;
+            int numChessmanPlayerB = 0;
+            for (int iCount = 1;
+                iCount < NUM_CHESSMAN_WIN + 2 &&
+                currCell + iCount < chessboard.Cell &&
+                currRow + iCount < chessboard.Row;
+                iCount++)
             {
-                case 1:
-                    score += 10;
-                    break;
-                case 2:
-                    score += 100;
-                    break;
-                case 3:
-                    score += 1000;
-                    break;
-                case 4:
-                    score += 10000;
-                    break;
-                case 5:
-                    score += 100000;
-                    break;
-                default:
-                    break;
-            }
-
-            return score;
-        }
-
-        private bool isBoardFull(Chessboard board)
-        {
-            for (int row = 0; row < board.Row; row++)
-            {
-                for (int cell = 0; cell < board.Cell; cell++)
+                if (chessboard.ObjChessbroad[currRow + iCount, currCell + iCount] == CHESSMAN_PLAYER_A)
                 {
-                    if (board.ObjChessbroad[row, cell] == 0)
-                    {
-                        return false;
-                    }
+                    numChessmanPlayerA++;
+                }
+                else if (chessboard.ObjChessbroad[currRow + iCount, currCell + iCount] == CHESSMAN_PLAYER_B)
+                {
+                    numChessmanPlayerB++;
+                    break;
+                }
+                else
+                {
+                    break;
                 }
             }
-
-            return true;
+            for (int iCount = 1;
+                     iCount < NUM_CHESSMAN_WIN + 2 &&
+                     currCell - iCount >= 0 &&
+                     currRow - iCount >= 0;
+                     iCount++)
+            {
+                if (chessboard.ObjChessbroad[currRow - iCount, currCell - iCount] == CHESSMAN_PLAYER_A)
+                {
+                    numChessmanPlayerA++;
+                }
+                else if (chessboard.ObjChessbroad[currRow - iCount, currCell - iCount] == CHESSMAN_PLAYER_B)
+                {
+                    numChessmanPlayerB++;
+                    break;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            totalScore -= defenseScore[numChessmanPlayerB];
+            totalScore += attackScore[numChessmanPlayerA];
+            return totalScore;
         }
-
-        private void btnPerson_Click(object sender, EventArgs e)
+        private long attackScore_CrossLeft(int currRow, int currCell) //chéo trái
         {
-            isPlayWithPC = false;
-            resetGame(sender, e);
-            txt_Speed.Text = "";
+            long totalScore = 0;
+            int numChessmanPlayerA = 0;
+            int numChessmanPlayerB = 0;
+            for (int iCount = 1;
+                iCount < NUM_CHESSMAN_WIN + 2 &&
+                currCell + iCount < chessboard.Cell &&
+                currRow - iCount >= 0;
+                iCount++)
+            {
+                if (chessboard.ObjChessbroad[currRow - iCount, currCell + iCount] == CHESSMAN_PLAYER_A)
+                {
+                    numChessmanPlayerA++;
+                }
+                else if (chessboard.ObjChessbroad[currRow - iCount, currCell + iCount] == CHESSMAN_PLAYER_B)
+                {
+                    numChessmanPlayerB++;
+                    break;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            for (int iCount = 1;
+                     iCount < NUM_CHESSMAN_WIN + 2 &&
+                     currCell - iCount >= 0 &&
+                     currRow + iCount < chessboard.Row;
+                     iCount++)
+            {
+                if (chessboard.ObjChessbroad[currRow + iCount, currCell - iCount] == CHESSMAN_PLAYER_A)
+                {
+                    numChessmanPlayerA++;
+                }
+                else if (chessboard.ObjChessbroad[currRow + iCount, currCell - iCount] == CHESSMAN_PLAYER_B)
+                {
+                    numChessmanPlayerB++;
+                    break;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            totalScore -= defenseScore[numChessmanPlayerB];
+            totalScore += attackScore[numChessmanPlayerA];
+            return totalScore;
         }
+        #endregion
+        #region defence
+        private long defenceScore_Row(int currRow, int currCell) //ttinhs điểm phòng thủ của nước đi tiếp theo trên hàng ngang
+        {
+            long totalScore = 0;
+            int numChessmanPlayerA = 0;
+            int numChessmanPlayerB = 0;
+            for (int iCount = 1; iCount < NUM_CHESSMAN_WIN + 2 && currRow + iCount < chessboard.Row; iCount++)
+            {
+                if (chessboard.ObjChessbroad[currRow + iCount, currCell] == CHESSMAN_PLAYER_A)
+                {
+                    numChessmanPlayerA++;
+                    break;
+                }
+                else if (chessboard.ObjChessbroad[currRow + iCount, currCell] == CHESSMAN_PLAYER_B)
+                {
+                    numChessmanPlayerB++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            for (int iCount = 1; iCount < NUM_CHESSMAN_WIN + 2 && currRow - iCount >= 0; iCount++)
+            {
+                if (chessboard.ObjChessbroad[currRow - iCount, currCell] == CHESSMAN_PLAYER_A)
+                {
+                    numChessmanPlayerA++;
+                    break;
+                }
+                else if (chessboard.ObjChessbroad[currRow - iCount, currCell] == CHESSMAN_PLAYER_B)
+                {
+                    numChessmanPlayerB++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            totalScore += defenseScore[numChessmanPlayerB];
+            return totalScore;
+        }
+        private long defenceScore_Cell(int currRow, int currCell)//cột dọc
+        {
+            long totalScore = 0;
+            int numChessmanPlayerA = 0;
+            int numChessmanPlayerB = 0;
+            for (int iCount = 1; iCount < NUM_CHESSMAN_WIN + 2 && currCell + iCount < chessboard.Cell; iCount++)
+            {
+                if (chessboard.ObjChessbroad[currRow, currCell + iCount] == CHESSMAN_PLAYER_A)
+                {
+                    numChessmanPlayerA++;
+                    break;
+                }
+                else if (chessboard.ObjChessbroad[currRow, currCell + iCount] == CHESSMAN_PLAYER_B)
+                {
+                    numChessmanPlayerB++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            for (int iCount = 1; iCount < NUM_CHESSMAN_WIN + 2 && currCell - iCount >= 0; iCount++)
+            {
+                if (chessboard.ObjChessbroad[currRow, currCell - iCount] == CHESSMAN_PLAYER_A)
+                {
+                    numChessmanPlayerA++;
+                    break;
+                }
+                else if (chessboard.ObjChessbroad[currRow, currCell - iCount] == CHESSMAN_PLAYER_B)
+                {
+                    numChessmanPlayerB++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            totalScore += defenseScore[numChessmanPlayerB];
+            return totalScore;
+        }
+        private long defenceScore_CrossRight(int currRow, int currCell)//chéo phải
+        {
+            long totalScore = 0;
+            int numChessmanPlayerA = 0;
+            int numChessmanPlayerB = 0;
+            for (int iCount = 1;
+                iCount < NUM_CHESSMAN_WIN + 2 &&
+                currCell + iCount < chessboard.Cell &&
+                currRow + iCount < chessboard.Row;
+                iCount++)
+            {
+                if (chessboard.ObjChessbroad[currRow + iCount, currCell + iCount] == CHESSMAN_PLAYER_A)
+                {
+                    numChessmanPlayerA++;
+                   
+                    numChessmanPlayerB++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            for (int iCount = 1;
+                     iCount < NUM_CHESSMAN_WIN + 2 &&
+                     currCell - iCount >= 0 &&
+                     currRow - iCount >= 0;
+                     iCount++)
+            {
+                if (chessboard.ObjChessbroad[currRow - iCount, currCell - iCount] == CHESSMAN_PLAYER_A)
+                {
+                    numChessmanPlayerA++;
+                    break;
+                }
+                else if (chessboard.ObjChessbroad[currRow - iCount, currCell - iCount] == CHESSMAN_PLAYER_B)
+                {
+                    numChessmanPlayerB++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            totalScore += defenseScore[numChessmanPlayerB];
+            return totalScore;
+        }
+        private long defenceScore_CrossLeft(int currRow, int currCell)//chéo trái
+        {
+            long totalScore = 0;
+            int numChessmanPlayerA = 0;
+            int numChessmanPlayerB = 0;
+            for (int iCount = 1;
+                iCount < NUM_CHESSMAN_WIN + 2 &&
+                currCell + iCount < chessboard.Cell &&
+                currRow - iCount >= 0;
+                iCount++)
+            {
+                if (chessboard.ObjChessbroad[currRow - iCount, currCell + iCount] == CHESSMAN_PLAYER_A)
+                {
+                    numChessmanPlayerA++;
+                    break;
+                }
+                else if (chessboard.ObjChessbroad[currRow - iCount, currCell + iCount] == CHESSMAN_PLAYER_B)
+                {
+                    numChessmanPlayerB++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            for (int iCount = 1;
+                     iCount < NUM_CHESSMAN_WIN + 2 &&
+                     currCell - iCount >= 0 &&
+                     currRow + iCount < chessboard.Row;
+                     iCount++)
+            {
+                if (chessboard.ObjChessbroad[currRow + iCount, currCell - iCount] == CHESSMAN_PLAYER_A)
+                {
+                    numChessmanPlayerA++;
+                    break;
+                }
+                else if (chessboard.ObjChessbroad[currRow + iCount, currCell - iCount] == CHESSMAN_PLAYER_B)
+                {
+                    numChessmanPlayerB++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            totalScore += defenseScore[numChessmanPlayerB];
+            return totalScore;
+        }
+        #endregion
+        
+
+        #endregion
+
 
         private void btnPC_Click(object sender, EventArgs e)
         {
@@ -604,5 +736,11 @@ namespace GAME_CARO
             txt_Speed.Text = "";
 
         }
+
+        private void ckb_Alpha_Beta_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
     }
 }

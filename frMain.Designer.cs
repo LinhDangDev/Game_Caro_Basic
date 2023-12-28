@@ -33,13 +33,13 @@
             this.label1 = new System.Windows.Forms.Label();
             this.btnNewGame = new System.Windows.Forms.Button();
             this.btnPC = new System.Windows.Forms.Button();
-            this.btnPerson = new System.Windows.Forms.Button();
             this.pnRight = new System.Windows.Forms.Panel();
             this.lbNamePlayerB = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.txt_Speed = new System.Windows.Forms.TextBox();
             this.pnCenter = new System.Windows.Forms.Panel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.ckb_Alpha_Beta = new System.Windows.Forms.CheckBox();
             this.pnLeft.SuspendLayout();
             this.pnRight.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -86,25 +86,13 @@
             // 
             // btnPC
             // 
-            this.btnPC.Location = new System.Drawing.Point(251, 603);
+            this.btnPC.Location = new System.Drawing.Point(252, 566);
             this.btnPC.Name = "btnPC";
             this.btnPC.Size = new System.Drawing.Size(142, 27);
             this.btnPC.TabIndex = 1;
             this.btnPC.Text = "Chơi với máy";
             this.btnPC.UseVisualStyleBackColor = true;
             this.btnPC.Click += new System.EventHandler(this.btnPC_Click);
-            // 
-            // btnPerson
-            // 
-            this.btnPerson.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.btnPerson.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.btnPerson.Location = new System.Drawing.Point(251, 565);
-            this.btnPerson.Name = "btnPerson";
-            this.btnPerson.Size = new System.Drawing.Size(146, 31);
-            this.btnPerson.TabIndex = 1;
-            this.btnPerson.Text = "Chơi với người";
-            this.btnPerson.UseVisualStyleBackColor = false;
-            this.btnPerson.Click += new System.EventHandler(this.btnPerson_Click);
             // 
             // pnRight
             // 
@@ -166,17 +154,28 @@
             this.pictureBox1.TabIndex = 5;
             this.pictureBox1.TabStop = false;
             // 
+            // ckb_Alpha_Beta
+            // 
+            this.ckb_Alpha_Beta.AutoSize = true;
+            this.ckb_Alpha_Beta.Location = new System.Drawing.Point(252, 613);
+            this.ckb_Alpha_Beta.Name = "ckb_Alpha_Beta";
+            this.ckb_Alpha_Beta.Size = new System.Drawing.Size(129, 17);
+            this.ckb_Alpha_Beta.TabIndex = 6;
+            this.ckb_Alpha_Beta.Text = "Alpha_Beta_Prunning";
+            this.ckb_Alpha_Beta.UseVisualStyleBackColor = true;
+            this.ckb_Alpha_Beta.CheckedChanged += new System.EventHandler(this.ckb_Alpha_Beta_CheckedChanged);
+            // 
             // frMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1046, 686);
+            this.Controls.Add(this.ckb_Alpha_Beta);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.btnNewGame);
             this.Controls.Add(this.txt_Speed);
             this.Controls.Add(this.btnPC);
             this.Controls.Add(this.pnCenter);
-            this.Controls.Add(this.btnPerson);
             this.Controls.Add(this.pnRight);
             this.Controls.Add(this.pnLeft);
             this.Name = "frMain";
@@ -199,12 +198,12 @@
         private System.Windows.Forms.Panel pnCenter;
         private System.Windows.Forms.Button btnNewGame;
         private System.Windows.Forms.Button btnPC;
-        private System.Windows.Forms.Button btnPerson;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label lbNamePlayerA;
         private System.Windows.Forms.Label lbNamePlayerB;
         private System.Windows.Forms.TextBox txt_Speed;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.CheckBox ckb_Alpha_Beta;
     }
 }
